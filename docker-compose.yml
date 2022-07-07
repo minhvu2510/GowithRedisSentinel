@@ -1,0 +1,61 @@
+version: '2'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  redis_ub_master:
+    container_name: redis_master1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - app-tier
+    ports:
+      - '6379:6379'
+      - '26375:26379'
+      - '5000:5000'
+    privileged: true
+    restart: unless-stopped
+    command: ["tail", "-F", "anything"]
+
+  redis_ub_slave:
+    container_name: redis_slave
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - app-tier
+    ports:
+      - '6378:6379'
+      - '26376:26379'
+    privileged: true
+    restart: unless-stopped
+    command: ["tail", "-F", "anything"]
+  redis_ub_sentinel:
+    container_name: redis_sentinel
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - app-tier
+    ports:
+      - '6377:6379'
+      - '26377:26379'
+    privileged: true
+    restart: unless-stopped
+    command: ["tail", "-F", "anything"]
+  core_go:
+    container_name: core_go
+    build:
+      context: ./
+      dockerfile: DockerfileGo
+    networks:
+      - app-tier
+    ports:
+      - '4000:4000'
+    privileged: true
+    restart: unless-stopped
+    command: ["tail", "-F", "anything"]
+

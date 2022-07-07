@@ -1,0 +1,11 @@
+FROM ubuntu:latest
+ENV LANG en_US.utf8
+RUN apt update
+RUN apt install -y curl sudo net-tools vim telnet redis-server redis-sentinel iputils-ping
+# RUN apt install  apt-utils sshpass tar git zip curl wget nano vim traceroute net-tools telnet telnet gcc -y
+RUN curl -OL https://golang.org/dl/go1.16.7.linux-amd64.tar.gz
+RUN tar -C /usr/local -xvf go1.16.7.linux-amd64.tar.gz
+RUN ln -s /usr/local/go/bin/go /usr/bin/go
+RUN mkdir /home/app
+COPY ./ /home/app
+# CMD ["tail -F anything"]
